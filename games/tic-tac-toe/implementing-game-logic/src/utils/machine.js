@@ -1,3 +1,4 @@
+
 /**
  * Creates a state machine object based on the provided configuration.
  *
@@ -7,12 +8,15 @@
  * @returns {Object} - The state machine object.
  */
 function createMachine(config) {
+  const noop = () => {};
   return {
     state: config.initial,
     transition(action) {
       const nextState = config.states[this.state].transitions[action];
       if (!nextState) {
-        throw new Error(`Invalid action: ${action}`);
+       console.warn (`Invalid Action:${action} for State:${this.state}`);
+       console.warn(`Stubbing with no-op transition`);
+        return noop; // no-op transition
       }
       this.state = nextState;
     },

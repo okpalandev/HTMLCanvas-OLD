@@ -3,7 +3,7 @@
  * @returns {Array<Array<string>>} The initialized game board.
  */
  function createBoard(ctx) {
-    const {width:WIDTH=800,height:HEIGHT=600} = ctx.canvas; 
+    const {width:WIDTH,height:HEIGHT} = ctx.canvas; 
     ctx.beginPath();
     ctx.strokeStyle='black';
     // Draw vertical lines
@@ -31,7 +31,7 @@
 }
 export {createBoard};
 function drawX(ctx, i, j) {
-    const { width: WIDTH = 800, height: HEIGHT = 600 } = ctx.canvas;
+    const { width: WIDTH , height: HEIGHT } = ctx.canvas;
     const cellWidth = WIDTH / 3;
     const cellHeight = HEIGHT / 3;
     const x = j * cellWidth + cellWidth / 2; // Center of the cell along the x-axis
@@ -82,7 +82,6 @@ function drawBoard(board) {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             const cell = board[i][j];
-
             if (cell === 'X') {
                 drawX(i, j); // Pass the indices i, j
             } else if (cell === 'O') {
