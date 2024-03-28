@@ -1,36 +1,42 @@
 .container {
     display: flex;
-    align-items: center;
-    position: relative;
     justify-content: center;
+    box-sizing: border-box;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
-    margin: auto;
-    height: 100dvh;
+    align-items: center;
 }
 
 .container canvas {
-    outline: 5px solid blue;
+    position: fixed;
+    outline: 2px solid blue;
+    margin:  auto;
+    top:0;
+bottom: 0;  
 }
 
 .player-selection {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    justify-self: center;
     font-size: 100px;
     position: absolute;
     left: 0;
-    right: 0;height: 100dvh;
+    right: 0;
+    top: 0;
+    bottom:0;
+    margin:auto;
     opacity: 0.5;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     box-sizing: border-box;
-    outline: 1px solid black;
     text-align: center;
     background-color: grey;
+    height: calc(100% + 10px)
 }
 
 .player-x {
