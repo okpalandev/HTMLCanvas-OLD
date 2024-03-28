@@ -16,6 +16,18 @@ function createMachine(config) {
       }
       this.state = nextState;
     },
+    dispatch(action) {
+      this.transition(action);
+      this.emit('transition', this.state);
+    },
+    on(event, callback) {
+      this[event] = callback;
+    },
+    emit(event, data) {
+      if (this[event]) {
+        this[event](data);
+      }
+    }
   };
 }
 
