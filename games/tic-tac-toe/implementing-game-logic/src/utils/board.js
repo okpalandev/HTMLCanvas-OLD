@@ -3,9 +3,7 @@
  * @returns {Array<Array<string>>} The initialized game board.
  */
  function createBoard(ctx) {
-
     const {width:WIDTH=800,height:HEIGHT=600} = ctx.canvas; 
-    
     ctx.beginPath();
     ctx.strokeStyle='black';
     // Draw vertical lines
@@ -47,7 +45,6 @@ function drawX(ctx, i, j) {
 
     // Calculate text width and height
     const text = 'X';
- 
 
     // Draw 'O' centered in the cell
     ctx.textAlign = 'center'; // Center horizontally
