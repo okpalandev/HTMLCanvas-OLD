@@ -2,12 +2,26 @@
 Being a game the UI should be rich,so this in module we will focus on enrich the UI.
 We will use ES6 Modules to organize our code and abstact the logic modules.We partly focus on using media queries to support mobile devices and use `CanvasRenderingContext2D`.
 
-
+## Our directory structure
 ```bash
 src/
-├── index.js
+├── index.js # the main entry for our program.
 ├── ui.css
 └── utils
-    ├── board.js
+    ├── board.js # the board logic
     └── index.js
+```
+
+```html
+ <div class="container">
+        <canvas id="tic-tac-toe"></canvas>
+        <div class="player-selection">
+            <div class="player-x">
+                <p>Player 1</p>
+            </div>
+            <div class="player-o">
+                <p>Player 2</p>
+            </div>
+        </div>
+    </div>
 ```
