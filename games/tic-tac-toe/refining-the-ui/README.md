@@ -11,6 +11,7 @@ src/
     ├── board.js # the board logic
     └── index.js
 ```
+
 In the `utils/index.js` directory, we have a factory module. We export an object without using a default export, which allows us to consume the modules and is good pratice as code is maintable for each directory we create.
 
 ```js
