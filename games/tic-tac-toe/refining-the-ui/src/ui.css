@@ -22,7 +22,6 @@ bottom: 0;
     justify-content: space-between;
     align-items: center;
     justify-self: center;
-    font-size: 100px;
     position: absolute;
     left: 0;
     right: 0;
@@ -36,40 +35,34 @@ bottom: 0;
     box-sizing: border-box;
     text-align: center;
     background-color: grey;
-    height: calc(100% + 10px)
+    height: calc(100% + 10px);
 }
 
 .player-x {
     order: -1; /* Display before the canvas */
     color: green;
-    display: block;
     justify-self: center;
     margin-left: 50px;
 }
 
 .player-x::before {
     content: "X";
+    font-size: 80px;
 }
 
 .player-o {
     order: 1; /* Display after the canvas */
     color: red;
-    display: block;
     margin-right: 50px;
 }
 
 .player-o::before {
     content: "O";
+    font-size: 80px;
+
 }
 
-.player-o p,
-.player-x p {
-    white-space: pre-wrap;
-    font-size: .05em;
+.player-o p 
+.player-x p{
+    font-size: medium;
 }
-
-.player-o p:hover,
-.player-x p:hover {
-    font-size: 100px;
-}
-
