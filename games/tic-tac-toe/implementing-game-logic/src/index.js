@@ -6,7 +6,6 @@ const ctx = canvas.getContext('2d');
 const WIDTH = canvas.width = 800;
 const HEIGHT = canvas.height = 800;
 
-
 const machine = createMachine({
   initial: 'idle',
   states: {
@@ -54,7 +53,12 @@ machine.on('start', function () {
 machine.on('playing', function () {
   if (isGameOver(board)) {
     machine.dispatch('draw');
-  }
+  };
+  
+  if (isWin(board, 'X')) {
+    machine.dispatch('win');
+  };
+
 });
 
 machine.on('win', function () {

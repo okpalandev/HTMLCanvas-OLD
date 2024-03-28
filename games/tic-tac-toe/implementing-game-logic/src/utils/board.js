@@ -91,7 +91,5 @@ function drawBoard(board) {
     }
     
 }
-export {drawBoard};
-
-
+export {drawBoard   }
 
