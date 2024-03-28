@@ -33,4 +33,26 @@ In the `utils/index.js` directory, we have a factory module. We export an object
     </div>
 ```
 
-In the context ui.css 
+In the context ui.css ,we have added responsive styles for both mobile:
+The snippet is not the full code,which is desinged with responsive-web-design a mobile freindly  design princple.
+```css
+
+/* For tablet devices and screens with a maximum width of 480px */
+@media (max-width: 480px) {
+    .container canvas {
+        width: 100vw;
+        height: 50vh;
+    }
+    
+    .context-menu {
+        height: 50px;
+        font-size: 14px;
+    }
+
+    .player-x::before,
+    .player-o::before {
+        font-size: 30px;
+    }
+}
+
+```
