@@ -29,7 +29,5 @@ function createMachine(config) {
     },
   };
 }
-
 export {createMachine}
-
 ````

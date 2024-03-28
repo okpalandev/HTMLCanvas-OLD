@@ -42,7 +42,6 @@
 
 .player-x,
 .player-o {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,8 +49,14 @@
 
 .player-x::before,
 .player-o::before {
-    font-size: 50px;
+  
+    font-size: 100px;
+} 
+
+.player-score {
+    font-size: 30px;
 }
+
 
 .player-x::before { content: "X"; color: green; }
 .player-o::before { content: "O"; color: red; }
@@ -67,14 +72,15 @@
         width: 100vw;
         height: 50vh;
     }
-    
+
     .context-menu {
         height: 50px;
-        font-size: 14px;
+        font-size: 20px;
     }
 
     .player-x::before,
     .player-o::before {
         font-size: 30px;
     }
+   
 }
