@@ -15,7 +15,6 @@
     right: 0;
     bottom: 0;
     margin: auto;
-    width: 100dvb;
     height: 50vh;
     outline: 2px solid blue;
     box-sizing: border-box;
@@ -47,24 +46,19 @@
     align-items: center;
 }
 
-.player-x::before,
-.player-o::before {
-  
-    font-size: 100px;
-} 
-
 .player-score {
-    font-size: 30px;
+    height: 100px;
+    line-height: 100px;
 }
 
 
-.player-x::before { content: "X"; color: green; }
-.player-o::before { content: "O"; color: red; }
-
-.player-x.active,
-.player-o.active {
-    background: orange;
+.player:first-of-type:before { content: "X"; color: green; 
+    font-size: 100px;
 }
+.player:last-of-type:before { content: "O"; color: red; 
+    font-size: 100px;
+}   
+
 
 /* For tablet devices and screens with a maximum width of 480px */
 @media (max-width: 480px) {
@@ -78,9 +72,6 @@
         font-size: 20px;
     }
 
-    .player-x::before,
-    .player-o::before {
-        font-size: 30px;
-    }
+  
    
 }
