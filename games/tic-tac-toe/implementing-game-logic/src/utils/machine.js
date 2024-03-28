@@ -28,6 +28,7 @@ function createMachine(config) {
         this[event](data);
       }
     }
+
   };
 }
 

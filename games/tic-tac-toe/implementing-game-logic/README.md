@@ -44,4 +44,43 @@ function createMachine(config) {
 
 export {createMachine}
 
-````
+```
+
+This machine allows us to transisition from states respectibely.
+
+```js
+const machine = createMachine({
+    initial: 'idle', // preloaded state
+    states: {
+      idle : {
+        transitions: {
+          start: 'start',
+        },
+      },
+      start: {
+        transitions: {
+          play: 'playing',
+        },
+      },
+      playing: {
+        transitions: {
+          move: 'playing',
+          win: 'win',
+          draw: 'draw',
+        },
+      },
+      win: {
+        transitions: {
+          restart: 'start',
+        },
+      },
+      draw: {
+        transitions: {
+          restart: 'start',
+        },
+      },
+    },
+  });
+
+console.log(machine.state);
+```
