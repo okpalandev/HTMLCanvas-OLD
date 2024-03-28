@@ -12,16 +12,17 @@ src/
     └── index.js
 ```
 
+```js
+export {createBoard, drawBoard, drawO, drawX} from './board.js'; 
+```
 In the `utils/index.js` directory, we have a factory module. We export an object without using a default export, which allows us to consume the modules and is good pratice as code is maintable for each directory we create.
 
-```js
-export {} 
-```
+
 
 ```html
  <div class="container">
         <canvas id="tic-tac-toe"></canvas>
-        <div class="player-selection">
+        <div class="context-menu">
             <div class="player-x">
                 <p>Player 1</p>
             </div>
@@ -31,3 +32,5 @@ export {}
         </div>
     </div>
 ```
+
+In the context ui.css 
