@@ -3,4 +3,11 @@ Being a game the UI should be rich,so this in module we will focus on enrich the
 We will use ES6 Modules to organize our code and abstact the logic modules.We partly focus on using media queries to support mobile devices and use `CanvasRenderingContext2D`.
 
 
-
+```bash
+src/
+├── index.js
+├── ui.css
+└── utils
+    ├── board.js
+    └── index.js
+```
