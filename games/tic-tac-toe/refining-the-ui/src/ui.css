@@ -14,7 +14,7 @@
     outline: 2px solid blue;
     margin:  auto;
     top:0;
-bottom: 0;  
+    bottom: 0;  
 }
 
 .player-selection {
@@ -59,10 +59,19 @@ bottom: 0;
 .player-o::before {
     content: "O";
     font-size: 80px;
-
 }
 
-.player-o p 
-.player-x p{
+.player-o p,
+.player-x p {
     font-size: medium;
+}
+
+.player-x.active  {
+    background:orange;
+    justify-self: left;
+}
+
+.player-o.active  {
+    background:orange;
+    justify-self: right;
 }
