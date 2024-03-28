@@ -2,7 +2,7 @@
  * Creates the game board and initializes the board data.
  * @returns {Array<Array<string>>} The initialized game board.
  */
- function createBoard(ctx) {
+ function createBoard( ctx) {
     const {width:WIDTH,height:HEIGHT} = ctx.canvas; 
     ctx.beginPath();
     ctx.strokeStyle='black';
@@ -78,14 +78,14 @@ function drawO(ctx, i, j) {
 
 export  {drawO};
 
-function drawBoard(board) {
+function drawBoard(ctx,board) {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             const cell = board[i][j];
             if (cell === 'X') {
-                drawX(i, j); // Pass the indices i, j
+                drawX(ctx,i, j); // Pass the indices i, j
             } else if (cell === 'O') {
-                drawO(i, j); // Pass the indices i, j
+                drawO(ctx,i, j); // Pass the indices i, j
             }
         }
     }

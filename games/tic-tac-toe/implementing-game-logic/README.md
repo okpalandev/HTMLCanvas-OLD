@@ -9,6 +9,7 @@ We will impmentate a function to transition between state,because our game our m
 so that we will not waste time adding new state to a configuration  our self.
 
 ```js
+
 /**
  * Creates a state machine object based on the provided configuration.
  *
@@ -18,12 +19,15 @@ so that we will not waste time adding new state to a configuration  our self.
  * @returns {Object} - The state machine object.
  */
 function createMachine(config) {
+  const noop = () => {};
   return {
     state: config.initial,
     transition(action) {
       const nextState = config.states[this.state].transitions[action];
       if (!nextState) {
-        throw new Error(`Invalid action: ${action}`);
+       console.warn (`Invalid Action:${action} for State:${this.state}`);
+       console.warn(`Stubbing with no-op transition`);
+        return noop; // no-op transition
       }
       this.state = nextState;
     },
@@ -39,48 +43,20 @@ function createMachine(config) {
         this[event](data);
       }
     }
+
   };
 }
 
 export {createMachine}
+
 
 ```
 
 This machine allows us to transisition from states respectibely.
 
 ```js
-const machine = createMachine({
-    initial: 'idle', // preloaded state
-    states: {
-      idle : {
-        transitions: {
-          start: 'start',
-        },
-      },
-      start: {
-        transitions: {
-          play: 'playing',
-        },
-      },
-      playing: {
-        transitions: {
-          move: 'playing',
-          win: 'win',
-          draw: 'draw',
-        },
-      },
-      win: {
-        transitions: {
-          restart: 'start',
-        },
-      },
-      draw: {
-        transitions: {
-          restart: 'start',
-        },
-      },
-    },
-  });
-
 console.log(machine.state);
 ```
+
+2) We then create a new module game-processing.js that will handle the eumulation of the game. We will use the state machine to handle the game logic.
+

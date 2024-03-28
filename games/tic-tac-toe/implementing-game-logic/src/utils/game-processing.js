@@ -1,8 +1,8 @@
 const isGameOver=(board)=>{
     return board.every((b,i)=> b[i] != '' );
-}
-export {isGameOver}
+};
 
+export { isGameOver }
 const isWin=(board,player)=>{
     const winPatterns = [
         [0,1,2],
@@ -22,4 +22,3 @@ const isWin=(board,player)=>{
 }
 
 export {isWin}
-

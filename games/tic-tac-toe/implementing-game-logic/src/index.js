@@ -41,7 +41,6 @@ const machine = createMachine({
 
 
 let board = createBoard(ctx);
-
 machine.on('idle', function () {
   machine.dispatch('start');
 });
@@ -54,7 +53,7 @@ machine.on('playing', function () {
   if (isGameOver(board)) {
     machine.dispatch('draw');
   };
-  
+
   if (isWin(board, 'X')) {
     machine.dispatch('win');
   };
@@ -80,24 +79,50 @@ machine.on('draw', function () {
   }, 3000);
 });
 
+let players = document.getElementsByClassName('player');
+let player = side(players[Math.random() > .5 ? 0 : 1]) === 'X' ? 'X' : 'O';
+let ai = player === 'X' ? 'O' : 'X';
+
+let currentPlayer = player;
+
 function init() {
   let isInactive = false;
   let timeoutId = setTimeout(() => {
     isInactive = true;
-    machine.dispatch('start');
+    machine.dispatch('idle'); // Change 'start' to 'idle'
   }, 5000);
 
-  canvas.addEventListener('click', () => {
-    clearTimeout(timeoutId);
+  canvas.addEventListener('click', function (event) {
     if (isInactive) {
-      machine.dispatch('start');
       isInactive = false;
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        isInactive = true;
+        machine.dispatch('idle');
+      }, 5000);
     }
-  });
 
+    if (machine.state === 'playing') {
+      let x = event.clientX - canvas.offsetLeft;
+      let y = event.clientY - canvas.offsetTop;
+      let row = Math.floor(y / 200);
+      let col = Math.floor(x / 200);
+      if (board[row][col] === '') {
+        board[row][col] = currentPlayer;
+        drawBoard(ctx, board);
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        machine.dispatch('move');
+      }
+    }
+  } );
+
+console.log('player:', player); 
   if (!!timeoutId) {
     clearTimeout(timeoutId);
   }
+}
+function side(element = document.querySelector('.player')) {
+    return element.innerText.trim();
 }
 
 init();
