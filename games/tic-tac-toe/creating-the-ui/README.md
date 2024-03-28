@@ -30,7 +30,7 @@ the HTML5 Page.
 I am using the canvas element as it a game.I walk you step by step on how to create the game which is a webstandard for graphics.These means I would  have to use the canvas ctx api(Application Programming Interface) javascirpt instead of the CSS to create the game layout.
 
 
-To see the complete implement see [USER_INTERFACE Python Notebook](./docs/USER_INTERFACE.ipynb) 
-and [README2.md](README2.md) which explains the algorithm.
+To see the complete implement see [USER_INTERFACE Python Notebook](./docs/UI.ipynb) 
+and [README2.md](README2.md) which explains the algorithms.
 
 

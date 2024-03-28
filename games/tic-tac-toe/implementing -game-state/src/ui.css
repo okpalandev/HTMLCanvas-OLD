@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    height: 100dvh;
+}
+
+.container canvas {
+    outline: 5px solid blue;
+}
+
+.player-selection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    right: 0;height: 100dvh;
+    opacity: 0.5;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    box-sizing: border-box;
+    outline: 1px solid black;
+    text-align: center;
+    background-color: grey;
+}
+
+.player-x {
+    order: -1; /* Display before the canvas */
+    color: green;
+    display: block;
+    justify-self: center;
+    margin-left: 50px;
+}
+
+.player-x::before {
+    content: "X";
+}
+
+.player-o {
+    order: 1; /* Display after the canvas */
+    color: red;
+    display: block;
+    margin-right: 50px;
+}
+
+.player-o::before {
+    content: "O";
+}
+
+.player-o p,
+.player-x p {
+    white-space: pre-wrap;
+    font-size: .05em;
+}
+
+.player-o p:hover,
+.player-x p:hover {
+    font-size: 100px;
+}
+
