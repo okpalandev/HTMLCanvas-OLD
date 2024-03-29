@@ -25,6 +25,11 @@ function createMachine(config) {
       if (onEnter && typeof onEnter === 'function') {
         onEnter.call(this); // Call the onEnter function with the context of the state machine
       }
+      const onExit = currentState.onExit;
+      if (onExit && typeof onExit === 'function') {
+        onExit.call(this); // Call the onExit function with the context of the state machine
+      }
+      
     },
     dispatch(action) {
       this.transition(action);

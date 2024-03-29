@@ -1,5 +1,5 @@
-import { createMachine } from './utils/index.js';
-import { createBoard, drawX, drawO,drawBoard,drawOverlay} from './utils/index.js';
+import { createMachine } from './utils/state-machine.js';
+import { createBoard, drawX, drawO, drawBoard, drawOverlay} from './utils/board.js';
 import { isWin, isBoardFull } from './utils/game-processing.js';
 import { startTimer, pauseTimer, resumeTimer } from './utils/timer.js';
 
@@ -29,8 +29,12 @@ const machine = createMachine({
       },
       onEnter: function() {
         startTimer(); // Start the timer
-        drawOverlay(ctx); // Draw the game board
+        drawOverlay(ctx); // Draw the overlay UI
+        canvas.addEventListener('click', overlayClickListener); // Listen for clicks on the overlay
       },
+      onExit: function() {
+        canvas.removeEventListener('click', overlayClickListener); // Remove the click listener
+      }
     },
     pause: {
       transitions: {
