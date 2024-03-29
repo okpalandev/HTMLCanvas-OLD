@@ -29,28 +29,31 @@ const machine = createMachine({
         stop: 'stop',
       },
     },
-    start: {
-      transitions: {
-        // Transition to the 'playing' state when the game starts playing
-        play: 'playing',
-        // Transition to the 'pause' state when the game is paused
-        pause: 'pause',
-        // Transition to the 'stop' state when the game stops
-        stop: 'stop',
-        // Stay in the 'idle' state if the game hasn't started yet
-        idle: 'idle',
-      },
-      onEnter: function() {
-        // Start the game timer
-        startTimer();
-        // Draw the overlay UI for selecting player character
-        drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
-      },
-      onExit: function() {
-        // Clear the overlay when exiting the 'start' state
-        clearOverlay(ctx);
-      }
-    },
+ // Modify the 'start' state in the state machine definition
+start: {
+  transitions: {
+    // Transition to the 'playing' state when the game starts playing
+    play: 'playing',
+    // Transition to the 'pause' state when the game is paused
+    pause: 'pause',
+    // Transition to the 'stop' state when the game stops
+    stop: 'stop',
+    // Stay in the 'idle' state if the game hasn't started yet
+    idle: 'idle',
+  },
+  onEnter: function() {
+    // Start the game timer
+    startTimer();
+    // Draw the overlay UI for selecting player character
+    drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
+    // Draw the initial game board
+    drawBoard();
+  },
+  onExit: function() {
+    // Clear the overlay when exiting the 'start' state
+    clearOverlay(ctx);
+  }
+},
     pause: {
       transitions: {
         // Transition to the 'playing' state when the game is resumed
@@ -191,6 +194,7 @@ function init() {
   board = createBoard(ctx);
   // Draw the overlay UI for selecting player character
   drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
+
 }
 
 // Call the init function to start the game
