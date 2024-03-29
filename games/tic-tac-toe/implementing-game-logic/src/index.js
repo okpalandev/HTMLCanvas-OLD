@@ -20,27 +20,20 @@ let board; // Declare the board variable
 // Define the state machine
 const machine = createMachine({
   // Define initial state
-  initial: 'idle',
+  initial: 'select', // Start with select state
   states: {
-    idle: {
+    select: {
       transitions: {
-        start: 'start',
-        stop: 'stop',
+        play: 'playing', // Transition to playing state when player selects character
       },
     },
-    start: {
+    playing: {
       transitions: {
-        play: 'playing',
+        move: 'playing',
+        win: 'win',
+        draw: 'draw',
         pause: 'pause',
-        stop: 'stop',
       },
-      onEnter: function() {
-        startTimer();
-        drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
-      },
-      onExit: function() {
-        clearCanvas(ctx);
-      }
     },
     pause: {
       transitions: {
@@ -55,14 +48,6 @@ const machine = createMachine({
       onEnter: function() {
         pauseTimer();
         resetGame();
-      },
-    },
-    playing: {
-      transitions: {
-        move: 'playing',
-        win: 'win',
-        draw: 'draw',
-        pause: 'pause',
       },
     },
     win: {
@@ -83,7 +68,17 @@ const machine = createMachine({
         pauseTimer();
       },
     },
-  },
+  }
+});
+
+// Event listener for character selection
+canvas.addEventListener('click', function selectCharacter(event) {
+  if (machine.state === 'select') {
+    const x = event.clientX - canvas.offsetLeft;
+    const selectedCharacter = x < WIDTH / 2 ? 'X' : 'O';
+    currentPlayer = selectedCharacter;
+    machine.dispatch('play'); // Dispatch play action to transition to playing state
+  }
 });
 
 // Event listener for the pause-play button
@@ -148,7 +143,6 @@ function resetGame() {
   drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
 }
 
-
 // Listen for state transitions
 machine.on('transition', function (state) {
   console.log('Transition:', state);
@@ -182,7 +176,6 @@ machine.on('transition', function (state) {
       
   };
 });
-
 
 // Function to initialize the game
 function init() {
