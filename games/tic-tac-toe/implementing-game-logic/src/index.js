@@ -17,65 +17,71 @@ let currentPlayer = 'X'; // Start with player X
 let gameStarted = false; // Flag to track if the game has started
 let board; // Declare the board variable
 
-// Define the state machine
 const machine = createMachine({
+
   // Define initial state
-  initial: 'select', // Start with select state
+  initial: 'start', // Initial state is 'start'
   states: {
+    start: {
+      transitions: {
+        select: 'select', // Transition to 'select' state to select player character
+      },
+      onEnter: function() {
+        init(); // Call the init function to start the game
+      }
+    },
     select: {
       transitions: {
-        play: 'playing', // Transition to playing state when player selects character
+        play: 'playing', // Transition to 'playing' state to start the game
       },
-      onExit : function() {
-        drawOverlay(ctx, currentPlayer); // Draw the character selection overlay
+      onEnter: function() {
+        drawOverlay(ctx); // Draw character selection overlay
       }
     },
     playing: {
       transitions: {
-        move: 'playing',
-        win: 'win',
-        draw: 'draw',
-        pause: 'pause',
+        win: 'game_over', // Transition to 'game_over' state when a player wins
+        draw: 'game_over', // Transition to 'game_over' state when the game ends in a draw
+        pause: 'pause', // Transition to 'pause' state when the game is paused
       },
+      onEnter: function() {
+        gameStarted = true; // Set gameStarted flag to true
+        ppBtn.textContent = 'Pause'; // Update button text
+        ssBtn.textContent = 'Stop'; // Update button text
+      }
     },
     pause: {
       transitions: {
-        play: 'playing',
-        stop: 'stop',
+        play: 'playing', // Transition to 'playing' state to resume the game
+        stop: 'stop', // Transition to 'stop' state to stop the game
       },
+      onEnter: function() {
+        ppBtn.textContent = 'Resume'; // Update button text
+      }
     },
     stop: {
       transitions: {
-        restart: 'select', // Change to 'select' state instead of 'start'
+        restart: 'start', // Transition to 'start' state to restart the game
       },
       onEnter: function() {
-        pauseTimer();
-        resetGame();
-      },
+        resetGame(); // Reset the game
+        ppBtn.textContent = 'Pause'; // Update button text
+        ssBtn.textContent = 'Start'; // Update button text
+      }
     },
-    win: {
+    game_over: {
       transitions: {
-        stop: 'stop',
+        restart: 'start', // Transition to 'start' state to restart the game
       },
       onEnter: function() {
-        pauseTimer();
-        const winningCells = getWinningCells(board, currentPlayer);
-        drawWinningLine(ctx, board, winningCells);
-      },
-    },
-    draw: {
-      transitions: {
-        restart: 'select', // Change to 'select' state instead of 'start'
-      },
-      onEnter: function() {
-        pauseTimer();
-      },
+        gameStarted = false; // Set gameStarted flag to false
+        ppBtn.textContent = 'Pause'; // Update button text
+        ssBtn.textContent = 'Restart'; // Update button text
+      }
     },
   }
 });
 
-// Flag to track if a character has been selected
-let characterSelected = false;
 
 // Function to reset character selection
 function resetCharacterSelection() {
@@ -183,7 +189,6 @@ function init() {
   board = createBoard(ctx);
   drawOverlay(ctx); // Call drawOverlay to draw character selection overlay
   drawBoard(ctx,board); // Draw the board
-}
 
-// Call the init function to start the game
-init();
+}
+init(); // Call the init function to start the game

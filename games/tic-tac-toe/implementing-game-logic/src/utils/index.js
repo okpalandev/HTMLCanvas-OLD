@@ -3,3 +3,5 @@ export { createBoard, drawX, drawO, drawBoard, drawOverlay, drawWinningLine } fr
 export {createMachine} from './state-machine.js';
 export { isBoardFull, isWin,getWinningCells } from "./game-processing.js";
 
+
+
