@@ -73,7 +73,7 @@ function drawO(ctx, i, j) {
     ctx.fillStyle = 'red';
 
     // Set font properties
-    ctx.font = 'bold 46px Courier New'; // Font style, size, and family
+    ctx.font = 'bold 100px Courier New'; // Font style, size, and family
 
     // Draw 'O' centered in the cell
     ctx.textAlign = 'center'; // Center horizontally
@@ -149,7 +149,7 @@ function drawOverlay(ctx, currentPlayer) {
 }
 
 function clearOverlay(ctx) {
-     const { width: WIDTH, height: HEIGHT } = ctx.canvas;
+    const { width: WIDTH, height: HEIGHT } = ctx.canvas;
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 }
 
