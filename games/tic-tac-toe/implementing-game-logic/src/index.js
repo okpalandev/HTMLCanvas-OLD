@@ -95,7 +95,7 @@ start: {
         // Pause the game timer when a player wins
         pauseTimer();
         // Draw the winning line
-        const winningCells = getWinningCells(board, currentPlayer);
+        const winningCells = getWinningCells(board, currentPlayer); // Use the getWinningCells function
         drawWinningLine(ctx, winningCells);
       },
     },
