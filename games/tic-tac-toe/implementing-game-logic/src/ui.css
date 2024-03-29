@@ -139,7 +139,7 @@
 }
 
 
-.controls #start-stop:hover,
+.controls #stop-start:hover,
 .controls #pause-play:hover {
     height: 100%;
     line-height: calc(200%);

@@ -98,7 +98,7 @@ const ssBtn = document.getElementById('stop-start');
 ssBtn.addEventListener('click', function () {
   if (machine.state === 'playing' || machine.state === 'pause') {
     machine.dispatch('stop');
-  } else {
+  } else if (machine.state === 'idle') {
     machine.dispatch('start'); // Dispatch 'start' action to transition to the start state
   }
 });
@@ -168,3 +168,5 @@ function init() {
 
 // Call the init function to start the game
 init();
+
+
