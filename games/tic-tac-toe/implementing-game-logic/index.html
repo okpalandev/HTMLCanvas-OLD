@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
-    <link rel="stylesheet" href="./src/ui.css">
+    <link rel="stylesheet" href="./src/ui.css" type="text/css">
     <script src="./src/index.js" type="module"> </script>
 </head>
 <body>
     <div class="canvas-container">
         <canvas id="canvas"></canvas>
+        <div id="countdown"> </div>
     </div>
     <div class="context-menu">
         <div class="player">
@@ -18,9 +19,11 @@
             </div>
         </div>
         <div class="controls">
-            <button id="start-stop" type="button">Start/Stop</button>
-            <button id="pause-play" type="button">Pause/Play</button>
+            <span id="pause-play" type="button">Pause/Play</span>
+
+            <span id="stop-start" type="button">Start/Stop</span>
         </div>
+        
         <div class="player">
             <div class="player-score">
                 <p>0</p>

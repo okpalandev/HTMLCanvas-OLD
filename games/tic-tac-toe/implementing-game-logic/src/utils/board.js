@@ -91,5 +91,33 @@ function drawBoard(ctx,board) {
     }
     
 }
-export {drawBoard   }
+export {drawBoard  }
 
+ function drawOverlay(ctx) {
+    const { width: WIDTH , height: HEIGHT }
+    = ctx.canvas;
+
+//   draw a split line from the center which will divide the canvas into 2 equal parts
+// then on the left side draw a green x and on the right side draw a red o
+// make it clickable so that when the user clicks on the x or o it will start the game
+    ctx.beginPath();
+    ctx.strokeStyle = 'black';
+    ctx.moveTo(WIDTH / 2, 0);
+    ctx.lineTo(WIDTH / 2, HEIGHT);
+    ctx.stroke();
+    ctx.closePath();
+
+    // Draw 'X' on the left side
+    ctx.fillStyle = 'green';
+    ctx.font = 'bold 46px Courier New';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('X', WIDTH / 4, HEIGHT / 2);
+
+    // Draw 'O' on the right side
+    ctx.fillStyle = 'red';
+    ctx.fillText('O', (WIDTH / 4) * 3, HEIGHT / 2);
+    
+}
+
+export {drawOverlay};

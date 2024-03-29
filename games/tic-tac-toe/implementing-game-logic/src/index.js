@@ -1,140 +1,166 @@
-import { createBoard, createMachine } from './utils/index.js';
-import { drawBoard, drawO, drawX } from './utils/index.js';
-import { isGameOver, isWin } from './utils/index.js'; 
+import { createMachine } from './utils/index.js';
+import { createBoard, drawX, drawO,drawBoard,drawOverlay} from './utils/index.js';
+import { isWin, isBoardFull } from './utils/game-processing.js';
+import { startTimer, pauseTimer, resumeTimer } from './utils/timer.js';
+
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+
 const WIDTH = canvas.width = 800;
 const HEIGHT = canvas.height = 800;
 
+// Define the state machine
 const machine = createMachine({
   initial: 'idle',
   states: {
     idle: {
       transitions: {
         start: 'start',
+        stop: 'stop',
       },
     },
     start: {
       transitions: {
         play: 'playing',
-        pause : 'stop',
+        pause: 'pause',
+        stop: 'stop',
+        idle: 'idle', 
+      },
+      onEnter: function() {
+        startTimer(); // Start the timer
+        drawOverlay(ctx); // Draw the game board
       },
     },
-    pause : {
+    pause: {
       transitions: {
         play: 'playing',
-        restart: 'start',
+        stop: 'stop',
       },
     },
     stop: {
       transitions: {
         restart: 'start',
       },
+      onEnter: function() {
+        pauseTimer(); // Pause the timer
+        resetGame(); // Reset game variables
+      },
     },
-   
     playing: {
       transitions: {
         move: 'playing',
         win: 'win',
         draw: 'draw',
+        pause: 'pause',
       },
     },
     win: {
       transitions: {
-        restart: 'start',
+        stop: 'stop',
+      },
+      onEnter: function() {
+        pauseTimer(); // Pause the timer
       },
     },
     draw: {
       transitions: {
         restart: 'start',
       },
+      onEnter: function() {
+        pauseTimer(); // Pause the timer
+      },
     },
   },
 });
 
-let board = createBoard(ctx);
 let currentPlayer = 'X'; // Start with player X
+let gameStarted = false; // Declare gameStarted variable
 
-machine.on('idle', function () {
-  machine.dispatch('start');
+// Event listener for the pause-play button
+const ppBtn = document.getElementById('pause-play'); 
+ppBtn.addEventListener('click', function () {
+  if (machine.state === 'playing') {
+    pauseTimer();
+    ppBtn.textContent = 'Resume';
+  } else if (machine.state === 'pause') {
+    resumeTimer();
+    ppBtn.textContent = 'Pause';
+  }
 });
 
-machine.on('start', function () {
-  machine.dispatch('play');
+// Event listener for the stop-start button
+const ssBtn = document.getElementById('stop-start');
+ssBtn.addEventListener('click', function () {
+  if (machine.state === 'playing' || machine.state === 'pause') {
+    machine.dispatch('stop');
+  } else {
+    machine.dispatch('start'); // Dispatch 'start' action to transition to the start state
+  }
 });
 
-machine.on('playing', function () {
-  if (isGameOver(board)) {
-    machine.dispatch('draw');
-  };
-
-  if (isWin(board, 'X')) {
-    machine.dispatch('win');
-  };
-
-});
-
-machine.on('win', function () {
-  drawBoard(ctx,board);
-  ctx.font = '48px serif';
-  ctx.fillStyle = 'black';
-  ctx.fillText(`${currentPlayer} wins!`, WIDTH/2 , HEIGHT / 2);
-  setTimeout(() => {
-    machine.dispatch('restart');
-  }, 3000);
-});
-
-machine.on('draw', function () {
-  ctx.font = '48px serif';
-  ctx.fillStyle = 'black';
-  ctx.fillText('Draw', WIDTH/2 , HEIGHT / 2);
-  setTimeout(() => {
-    machine.dispatch('restart');
-  }, 3000);
-});
-
+// Remove the machine.dispatch('start') from init()
 function init() {
+  // Initialize the game board
+  let board = createBoard(ctx);
+
+  // Randomly select the starting player
+  currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
+
+  // Add a click event listener to the canvas
   canvas.addEventListener('click', function (event) {
-    if (machine.state === 'playing') {
-      let x = event.clientX - canvas.offsetLeft;
-      let y = event.clientY - canvas.offsetTop;
-      let row = Math.floor(y / 200);
-      let col = Math.floor(x / 200);
-      if (board[row][col] === '') {
-        board[row][col] = currentPlayer;
-        drawBoard(ctx, board);
-        if (currentPlayer === 'X') {
-          currentPlayer = 'O'; // Switch to player O
-        } else {
-          currentPlayer = 'X'; // Switch to player X
-        }
+    // Check if the game has started
+    if (!gameStarted) {
+      return; // Ignore clicks if the game has not started
+    }
+
+    // Get the click coordinates relative to the canvas
+    let x = event.clientX - canvas.offsetLeft;
+    let y = event.clientY - canvas.offsetTop;
+
+    // Calculate the clicked cell's row and column
+    let row = Math.floor(y / (HEIGHT / 3));
+    let col = Math.floor(x / (WIDTH / 3));
+
+    // Check if the clicked cell is empty
+    if (board[row][col] === '') {
+      // Place the current player's symbol on the clicked cell
+      if (currentPlayer === 'X') {
+        drawX(ctx, row, col); // Draw 'X' on the canvas
+        board[row][col] = 'X'; // Update the game board data
+      } else {
+        drawO(ctx, row, col); // Draw 'O' on the canvas
+        board[row][col] = 'O'; // Update the game board data
+      }
+      
+      // Check for win or draw conditions
+      if (isWin(board, currentPlayer)) {
+        machine.dispatch('win');
+      } else if (isBoardFull(board)) {
+        machine.dispatch('draw');
+      } else {
+        // Switch to the next player
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        // Update the game state
         machine.dispatch('move');
       }
     }
   });
-  
 
-  const ppBtn = document.getElementById('pause-play'); 
-  ppBtn.addEventListener('click', function () {
-    if (machine.state === 'playing') {
-      machine.dispatch('pause');
-    } else if (machine.state === 'pause') {
-      machine.dispatch('play');
-    } 
+  // Listen for state transitions
+  machine.on('transition', function (state) {
+    console.log('Transition:', state)
+    if(state === 'start') {     
+       gameStarted = true; // Set gameStarted flag to true
+
+    } else if (state === 'playing' ) {
+      ppBtn.textContent = 'Pause'; // Update the pause-play button text
+      ssBtn.textContent = 'Stop'; // Update the stop-start button text
+    } else if (state === 'stop') {
+      resetGame(); // Reset the game
+    }
   });
-
-  const ssBtn = document.getElementById('start-stop');
-  ssBtn.addEventListener('click', function () {
-    machine.dispatch('restart');
-  });
-
-
-
-
-
 }
 
-
-
+// Call the init function to start the game
 init();
