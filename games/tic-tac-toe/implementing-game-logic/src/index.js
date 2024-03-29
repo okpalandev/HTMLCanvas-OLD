@@ -13,7 +13,6 @@ const HEIGHT = canvas.height = 800;
 
 // Initialize variables
 let currentPlayer = 'X'; // Start with player X
-let gameStarted = false; // Flag to track if the game has started
 let board; // Declare the board variable
 
 // Define the state machine
@@ -23,126 +22,63 @@ const machine = createMachine({
   states: {
     idle: {
       transitions: {
-        // Transition to the 'start' state when the game starts
-        start: 'start',
-        // Transition to the 'stop' state when the game stops
-        stop: 'stop',
-      },
-    },
- // Modify the 'start' state in the state machine definition
-start: {
-  transitions: {
-    // Transition to the 'playing' state when the game starts playing
-    play: 'playing',
-    // Transition to the 'pause' state when the game is paused
-    pause: 'pause',
-    // Transition to the 'stop' state when the game stops
-    stop: 'stop',
-    // Stay in the 'idle' state if the game hasn't started yet
-    idle: 'idle',
-  },
-  onEnter: function() {
-    // Start the game timer
-    startTimer();
-    // Draw the overlay UI for selecting player character
-    drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
-    // Draw the initial game board
-    drawBoard();
-  },
-  onExit: function() {
-    // Clear the overlay when exiting the 'start' state
-    clearOverlay(ctx);
-  }
-},
-    pause: {
-      transitions: {
-        // Transition to the 'playing' state when the game is resumed
-        play: 'playing',
-        // Transition to the 'stop' state when the game stops
-        stop: 'stop',
-      },
-    },
-    stop: {
-      transitions: {
-        // Transition to the 'start' state when the game restarts
-        restart: 'start',
-      },
-      onEnter: function() {
-        // Pause the game timer
-        pauseTimer();
-        // Reset game variables and state
-        resetGame();
+        // Transition to the 'playing' state when the game starts
+        start: 'playing',
       },
     },
     playing: {
       transitions: {
-        // Stay in the 'playing' state when a move is made
-        move: 'playing',
-        // Transition to the 'win' state when a player wins
-        win: 'win',
-        // Transition to the 'draw' state when the game is drawn
-        draw: 'draw',
-        // Transition to the 'pause' state when the game is paused
-        pause: 'pause',
-      },
-    },
-    win: {
-      transitions: {
-        // Transition to the 'stop' state when the game is stopped after a win
+        // Transition to the 'stop' state when the game stops
         stop: 'stop',
       },
       onEnter: function() {
-        // Pause the game timer when a player wins
-        pauseTimer();
-        // Draw the winning line
-        const winningCells = getWinningCells(board, currentPlayer); // Use the getWinningCells function
-        drawWinningLine(ctx, winningCells);
+        // Start the game timer
+        startTimer();
+        // Draw the overlay UI for selecting player character
+        drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
+        // Initialize the game board
+        board = createBoard(ctx);
       },
     },
-    draw: {
+    stop: {
       transitions: {
-        // Transition to the 'start' state when the game restarts after a draw
-        restart: 'start',
+        // Transition to the 'idle' state when the game restarts
+        restart: 'idle',
       },
       onEnter: function() {
-        // Pause the game timer when the game ends in a draw
+        // Pause the game timer
         pauseTimer();
+        // Clear the canvas
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        // Reset the current player
+        currentPlayer = 'X';
+        // Draw the overlay UI for selecting player character
+        drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
       },
     },
   },
 });
 
-// Event listener for the pause-play button
-const ppBtn = document.getElementById('pause-play');
-ppBtn.addEventListener('click', function () {
-  // Toggle between pausing and resuming the game
-  if (machine.state === 'playing') {
-    pauseTimer();
-    ppBtn.textContent = 'Resume';
-  } else if (machine.state === 'pause') {
-    resumeTimer();
-    ppBtn.textContent = 'Pause';
-  }
+// Event listener for the start button
+const startBtn = document.getElementById('start');
+startBtn.addEventListener('click', function () {
+  machine.dispatch('start');
 });
 
-// Event listener for the stop-start button
-const ssBtn = document.getElementById('stop-start');
-ssBtn.addEventListener('click', function () {
-  // Start or stop the game based on its current state
-  if (machine.state === 'playing' || machine.state === 'pause') {
-    machine.dispatch('stop');
-  } else if (machine.state === 'idle') {
-    machine.dispatch('start'); // Dispatch 'start' action to transition to the start state
-  }
+// Event listener for the stop button
+const stopBtn = document.getElementById('stop');
+stopBtn.addEventListener('click', function () {
+  machine.dispatch('stop');
+});
+
+// Event listener for the restart button
+const restartBtn = document.getElementById('restart');
+restartBtn.addEventListener('click', function () {
+  machine.dispatch('restart');
 });
 
 // Add a click event listener to the canvas for making moves
 canvas.addEventListener('click', function (event) {
-  // Check if the game has started
-  if (!gameStarted) {
-    return; // Ignore clicks if the game has not started
-  }
-
   // Get the click coordinates relative to the canvas
   let x = event.clientX - canvas.offsetLeft;
   let y = event.clientY - canvas.offsetTop;
@@ -164,53 +100,34 @@ canvas.addEventListener('click', function (event) {
 
     // Check for win or draw conditions
     if (isWin(board, currentPlayer)) {
-      machine.dispatch('win');
+      console.log('Player', currentPlayer, 'wins!');
+      machine.dispatch('stop');
     } else if (isBoardFull(board)) {
-      machine.dispatch('draw');
+      console.log('It\'s a draw!');
+      machine.dispatch('stop');
     } else {
       // Switch to the next player
       currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      // Update the game state
-      machine.dispatch('move');
     }
   }
 });
-
-// Function to reset the game
-function resetGame() {
-  // Clear the canvas
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-  // Initialize the game board
-  board = createBoard(ctx);
-  // Reset the current player
-  currentPlayer = 'X';
-  // Draw the overlay UI for selecting player character
-  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
-}
-
-// Function to initialize the game
-function init() {
-  // Initialize the game board
-  board = createBoard(ctx);
-  // Draw the overlay UI for selecting player character
-  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
-
-}
-
-// Call the init function to start the game
-init();
 
 // Listen for state transitions
 machine.on('transition', function (state) {
   // Log state transitions
   console.log('Transition:', state);
-
-  // Update button texts based on game state
-  if (state === 'playing') {
-    ppBtn.textContent = 'Pause'; // Update the pause-play button text
-    ssBtn.textContent = 'Stop'; // Update the stop-start button text
-    gameStarted = true; // Set gameStarted flag to true
-  } else if (state === 'stop') {
-    resetGame(); // Reset the game
-  }
 });
+
+// Function to clear the canvas and reset the game
+function clearCanvas() {
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
+
+// Function to initialize the game
+function init() {
+  // Draw the overlay UI for selecting player character
+  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
+}
+
+// Call the init function to start the game
+init();
