@@ -2,7 +2,7 @@
 import { createMachine } from './utils/state-machine.js';
 import { startTimer, pauseTimer, resumeTimer } from './utils/timer.js';
 import { drawOverlay, clearOverlay, drawWinningLine, createBoard } from './utils/board.js';
-import { isWin, isBoardFull } from './utils/game-processing.js';
+import { isWin, isBoardFull ,getWinningCells } from './utils/game-processing.js';
 
 // Get the canvas element and its 2d rendering context
 const canvas = document.getElementById('canvas');
@@ -159,20 +159,31 @@ init();
 
 // Listen for state transitions
 machine.on('transition', function (state) {
-  console.log('Transition:', state);
 
-  if (state === 'playing') {
-    ppBtn.textContent = 'Pause';
-    ssBtn.textContent = 'Stop';
-    gameStarted = true;
-  } else if (state === 'pause') { 
-    ppBtn.textContent = 'Resume';
-  }
-  else if (state === 'idle') {
-    ppBtn.textContent = 'Pause';
-    ssBtn.textContent = 'Start';
-    gameStarted = false;
-  } else if (state === 'stop') {
-    resetGame();
-  }
+  console.log('Transition:', state);
+  switch (state) {
+    case 'playing':
+      ppBtn.textContent = 'Pause';
+      ssBtn.textContent = 'Stop';
+      gameStarted = true;
+      break;
+    case 'pause':
+      ppBtn.textContent = 'Resume';
+      break;
+    case 'idle':
+      ppBtn.textContent = 'Pause';
+      ssBtn.textContent = 'Start';
+      gameStarted = false;
+      break;
+    case 'win':
+    case 'draw':
+      ppBtn.textContent = 'Pause';
+      ssBtn.textContent = 'Restart';
+      gameStarted = false;
+      break;
+    case 'stop':
+      resetGame();
+      break;
+  };
+  
 });

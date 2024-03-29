@@ -31,3 +31,33 @@ function isBoardFull(board) {
   export {isBoardFull}
 
   
+
+  function getWinningCells(board, player) {
+    const winningCells = [];
+    // Check rows
+    for (let i = 0; i < 3; i++) {
+        if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
+            winningCells.push([i, 0], [i, 1], [i, 2]);
+            return winningCells;
+        }
+    }
+    // Check columns
+    for (let j = 0; j < 3; j++) {
+        if (board[0][j] === player && board[1][j] === player && board[2][j] === player) {
+            winningCells.push([0, j], [1, j], [2, j]);
+            return winningCells;
+        }
+    }
+    // Check diagonals
+    if (board[0][0] === player && board[1][1] === player && board[2][2] === player) {
+        winningCells.push([0, 0], [1, 1], [2, 2]);
+        return winningCells;
+    }
+    if (board[0][2] === player && board[1][1] === player && board[2][0] === player) {
+        winningCells.push([0, 2], [1, 1], [2, 0]);
+        return winningCells;
+    }
+    return winningCells;
+}
+
+export { getWinningCells };
