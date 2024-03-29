@@ -98,13 +98,20 @@ function drawBoard(ctx, board) {
         }
     }
 }
-
 /**
- * Draws an overlay on the canvas to separate 'X' and 'O' sides.
+ * Draws an overlay on the canvas to select the player character ('X' or 'O').
  * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+ * @param {string} currentPlayer - The current player ('X' or 'O').
  */
-function drawOverlay(ctx) {
+function drawOverlay(ctx, currentPlayer) {
     const { width: WIDTH, height: HEIGHT } = ctx.canvas;
+    // fill the left side with green and the right side with red
+    
+    ctx.fillStyle = 'red';
+    ctx.fillRect(0, 0, WIDTH / 2, HEIGHT);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
+
     // Draw vertical line
     ctx.beginPath();
     ctx.strokeStyle = 'black';
@@ -114,17 +121,63 @@ function drawOverlay(ctx) {
     ctx.closePath();
 
     // Draw 'X' on the left side
-    ctx.fillStyle = 'green';
-    ctx.font = 'bold 46px Courier New';
+    ctx.fillStyle = currentPlayer === 'X' ? 'green' : 'gray';
+    ctx.font = 'bold 205px Courier New';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('X', WIDTH / 4, HEIGHT / 2);
-    
+
     // Draw 'O' on the right side
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = currentPlayer === 'O' ? 'red' : 'gray';
     ctx.fillText('O', (WIDTH / 4) * 3, HEIGHT / 2);
+
+    // Add event listener to select character
+    canvas.addEventListener('click', selectCharacter);
+
+    function selectCharacter(event) {
+        const x = event.clientX - canvas.offsetLeft;
+        const selectedCharacter = x < WIDTH / 2 ? 'X' : 'O';
+        if (selectedCharacter !== currentPlayer) {
+            currentPlayer = selectedCharacter;
+            // Clear the canvas and redraw the overlay with the updated selection
+            clearOverlay(ctx);
+            drawOverlay(ctx, currentPlayer);
+        }
+        // Remove the event listener after character selection
+        canvas.removeEventListener('click', selectCharacter);
+    }
 }
 
-export { createBoard, drawX, drawO, drawBoard, drawOverlay };
+function clearOverlay(ctx) {
+     const { width: WIDTH, height: HEIGHT } = ctx.canvas;
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
 
+function drawWinningLine(ctx, board, winningCells) {
+    const cellWidth = WIDTH / 3;
+    const cellHeight = HEIGHT / 3;
+    
+    // Set line color and thickness
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 5;
+  
+    ctx.beginPath();
+    // Determine the starting position of the line based on the first winning cell
+    const startX = winningCells[0][1] * cellWidth + cellWidth / 2;
+    const startY = winningCells[0][0] * cellHeight + cellHeight / 2;
+    ctx.moveTo(startX, startY);
+    
+    // Draw line through all winning cells
+    for (let i = 1; i < winningCells.length; i++) {
+        const x = winningCells[i][1] * cellWidth + cellWidth / 2;
+        const y = winningCells[i][0] * cellHeight + cellHeight / 2;
+        ctx.lineTo(x, y);
+    }
+  
+    ctx.stroke();
+    ctx.closePath();
+    
+}
+export { drawWinningLine}
+export { createBoard, drawX, drawO, drawBoard, drawOverlay,clearOverlay };
 

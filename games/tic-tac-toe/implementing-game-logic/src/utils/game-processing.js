@@ -9,14 +9,17 @@ const isWin = (board, player) => {
       [0, 4, 8],
       [2, 4, 6],
     ];
-  
+    // Check if any of the win patterns match the player's cells
+
     return winPatterns.some(pattern => {
       return pattern.every(index => {
+
         const row = Math.floor(index / 3);
         const col = index % 3;
         return board[row][col] === player;
       });
     });
+
   };
   
   export { isWin };
