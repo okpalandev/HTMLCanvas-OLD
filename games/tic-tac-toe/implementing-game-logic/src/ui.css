@@ -1,14 +1,14 @@
-.container {
+.canvas-container {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-  width: 100vw;
-  height: 100vh;
+    width: 100vw;
+    height: 100vh;
 }
 
-.container canvas {
+.canvas-container canvas {
     position: fixed;
     top: 0;
     left: 0;
@@ -37,57 +37,70 @@
     padding: 10px;
     width: 90%; /* Adjust width for better alignment */
 }
-span {
+
+.context-menu span {
     cursor: pointer;
 }
 
-.player {
+.context-menu .player {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.player-score {
-    height: 100px;
-    line-height: 100px;
-}
-
-.player p    {
+.context-menu .player-score {
     display: block;
-    font-size: 50px;
-    color:black;
+    font-size: 20px;
+    color: black;
     margin: 15px;
     padding: 0;
 }
 
-.player:first-of-type {
+.player-score::before {
+    content: "Score: ";
+    color: black;
+    font-size: 20px;
+}
+
+
+.context-menu .player p {
+    display: block;
+    font-size: 50px;
+    color: black;
+    margin: 15px;
+    padding: 0;
+}
+
+.context-menu .player:first-of-type {
     background: lightgreen;
 }
 
-.player:last-of-type {
+.context-menu .player:last-of-type {
     background: lightcoral;
 }
 
-.player:first-of-type:before { content: "X"; color: green; 
+.context-menu .player:first-of-type:before {
+    content: "X";
+    color: green;
     font-size: 100px;
 }
-.player:last-of-type:before { content: "O"; color: red; 
-    font-size: 100px;
-}   
 
+.context-menu .player:last-of-type:before {
+    content: "O";
+    color: red;
+    font-size: 100px;
+}
 
 /* For tablet devices and screens with a maximum width of 480px */
 @media (max-width: 480px) {
-    .container canvas {
-        width: 100vw;
+    .canvas-container canvas {
+        width: 80vw;
         height: 50vh;
     }
 
     .context-menu {
         height: 50px;
-        font-size: 20px;
+        font-size: 10px;
+        width: min-content;
     }
-
-  
-   
 }

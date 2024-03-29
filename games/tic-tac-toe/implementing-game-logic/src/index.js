@@ -1,7 +1,8 @@
 import { createBoard, createMachine } from './utils/index.js';
 import { drawBoard, drawO, drawX } from './utils/index.js';
+import { isGameOver, isWin } from './utils/index.js'; 
 
-const canvas = document.getElementById('tic-tac-toe');
+const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const WIDTH = canvas.width = 800;
 const HEIGHT = canvas.height = 800;
@@ -17,8 +18,21 @@ const machine = createMachine({
     start: {
       transitions: {
         play: 'playing',
+        pause : 'stop',
       },
     },
+    pause : {
+      transitions: {
+        play: 'playing',
+        restart: 'start',
+      },
+    },
+    stop: {
+      transitions: {
+        restart: 'start',
+      },
+    },
+   
     playing: {
       transitions: {
         move: 'playing',
@@ -39,8 +53,9 @@ const machine = createMachine({
   },
 });
 
-
 let board = createBoard(ctx);
+let currentPlayer = 'X'; // Start with player X
+
 machine.on('idle', function () {
   machine.dispatch('start');
 });
@@ -64,7 +79,7 @@ machine.on('win', function () {
   drawBoard(ctx,board);
   ctx.font = '48px serif';
   ctx.fillStyle = 'black';
-  ctx.fillText('You win!', WIDTH/2 , HEIGHT / 2);
+  ctx.fillText(`${currentPlayer} wins!`, WIDTH/2 , HEIGHT / 2);
   setTimeout(() => {
     machine.dispatch('restart');
   }, 3000);
@@ -79,29 +94,8 @@ machine.on('draw', function () {
   }, 3000);
 });
 
-let players = document.getElementsByClassName('player');
-let player = side(players[Math.random() > .5 ? 0 : 1]) === 'X' ? 'X' : 'O';
-let ai = player === 'X' ? 'O' : 'X';
-
-let currentPlayer = player;
-
 function init() {
-  let isInactive = false;
-  let timeoutId = setTimeout(() => {
-    isInactive = true;
-    machine.dispatch('idle'); // Change 'start' to 'idle'
-  }, 5000);
-
   canvas.addEventListener('click', function (event) {
-    if (isInactive) {
-      isInactive = false;
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        isInactive = true;
-        machine.dispatch('idle');
-      }, 5000);
-    }
-
     if (machine.state === 'playing') {
       let x = event.clientX - canvas.offsetLeft;
       let y = event.clientY - canvas.offsetTop;
@@ -110,19 +104,20 @@ function init() {
       if (board[row][col] === '') {
         board[row][col] = currentPlayer;
         drawBoard(ctx, board);
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        if (currentPlayer === 'X') {
+          currentPlayer = 'O'; // Switch to player O
+        } else {
+          currentPlayer = 'X'; // Switch to player X
+        }
         machine.dispatch('move');
       }
     }
-  } );
+  });
+  
+  const toggleState
 
-console.log('player:', player); 
-  if (!!timeoutId) {
-    clearTimeout(timeoutId);
-  }
 }
-function side(element = document.querySelector('.player')) {
-    return element.innerText.trim();
-}
+
+
 
 init();
