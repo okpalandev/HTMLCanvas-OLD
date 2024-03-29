@@ -26,6 +26,11 @@ const machine = createMachine({
       transitions: {
         play: 'playing', // Transition to playing state when player selects character
       },
+      onExit : function() {
+        clearCanvas(ctx);
+  const board = createBoard(ctx);
+        drarwBoard(ctx, board);
+      }
     },
     playing: {
       transitions: {
@@ -96,7 +101,7 @@ ppBtn.addEventListener('click', function () {
 // Event listener for the stop-start button
 const ssBtn = document.getElementById('stop-start');
 ssBtn.addEventListener('click', function () {
-  if (machine.state === 'playing' || machine.state === 'pause') {
+  if (machine.state === 'playing' || machine.state === 'pause' || machine.state === 'win' || machine.state === 'draw') {
     machine.dispatch('stop');
   } else if (machine.state === 'idle') {
     machine.dispatch('start');
@@ -140,7 +145,6 @@ function resetGame() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
   board = createBoard(ctx);
   currentPlayer = 'X';
-  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
 }
 
 // Listen for state transitions
@@ -180,7 +184,6 @@ machine.on('transition', function (state) {
 // Function to initialize the game
 function init() {
   board = createBoard(ctx);
-  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
 }
 
 // Call the init function to start the game

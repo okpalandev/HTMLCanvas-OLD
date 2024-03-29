@@ -140,8 +140,8 @@ function drawOverlay(ctx, currentPlayer) {
         if (selectedCharacter !== currentPlayer) {
             currentPlayer = selectedCharacter;
             // Clear the canvas and redraw the overlay with the updated selection
-            clearOverlay(ctx);
-            drawOverlay(ctx, currentPlayer);
+            clearCanvas(ctx);
+            /**  drawOverlay(ctx, currentPlayer); */
         }
         // Remove the event listener after character selection
         canvas.removeEventListener('click', selectCharacter);
