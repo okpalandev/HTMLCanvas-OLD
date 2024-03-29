@@ -112,12 +112,17 @@
     margin: 10px;
     border-radius: 10px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5) inset;
+    transition: height step-end;
+    
 }
 
 #start-stop:hover,
 #pause-play:hover {
     cursor: pointer;
-}
+    height: 100%;
+    
+};
+
 
 /* For tablet devices and screens with a maximum width of 480px */
 @media (max-width: 480px) {

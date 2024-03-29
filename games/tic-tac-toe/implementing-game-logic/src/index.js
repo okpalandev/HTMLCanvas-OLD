@@ -114,7 +114,6 @@ function init() {
     }
   });
   
-  const toggleState
 
 }
 
