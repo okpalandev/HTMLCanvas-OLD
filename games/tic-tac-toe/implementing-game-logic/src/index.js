@@ -1,7 +1,7 @@
 // Import necessary functions and createMachine from './utils'
 import { createMachine } from './utils/state-machine.js';
 import { startTimer, pauseTimer, resumeTimer, resetTimer } from './utils/timer.js';
-import { drawOverlay, drawWinningLine, createBoard, clearCanvas, drawX, drawO } from './utils/board.js';
+import { drawOverlay, drawWinningLine, createBoard, clearCanvas, drawX, drawO, drawBoard } from './utils/board.js';
 import { isWin, isBoardFull, getWinningCells } from './utils/game-processing.js';
 
 // Get the canvas element and its 2d rendering context
@@ -16,7 +16,6 @@ const HEIGHT = canvas.height = 800;
 let currentPlayer = 'X'; // Start with player X
 let gameStarted = false; // Flag to track if the game has started
 let board; // Declare the board variable
-
 
 // Define the state machine
 const machine = createMachine({
@@ -47,7 +46,7 @@ const machine = createMachine({
     },
     stop: {
       transitions: {
-        restart: 'start',
+        restart: 'select', // Change to 'select' state instead of 'start'
       },
       onEnter: function() {
         pauseTimer();
@@ -66,7 +65,7 @@ const machine = createMachine({
     },
     draw: {
       transitions: {
-        restart: 'start',
+        restart: 'select', // Change to 'select' state instead of 'start'
       },
       onEnter: function() {
         pauseTimer();
@@ -75,16 +74,14 @@ const machine = createMachine({
   }
 });
 
-// Event listener for character selection
-function selectCharacter(event) {
-  if (machine.state === 'select') {
-    const x = event.clientX - canvas.offsetLeft;
-    currentPlayer = x < WIDTH / 2 ? 'X' : 'O';
-    machine.dispatch('play'); // Dispatch play action to transition to playing state
-  }
-}
+// Flag to track if a character has been selected
+let characterSelected = false;
 
-canvas.addEventListener('click', selectCharacter);
+// Function to reset character selection
+function resetCharacterSelection() {
+  characterSelected = false;
+  drawOverlay(ctx, currentPlayer  ); // Redraw overlay to allow for character selection again
+}
 
 // Event listener for the pause-play button
 const ppBtn = document.getElementById('pause-play');
@@ -103,12 +100,14 @@ const ssBtn = document.getElementById('stop-start');
 ssBtn.addEventListener('click', function () {
   if (machine.state === 'playing' || machine.state === 'pause' || machine.state === 'win' || machine.state === 'draw') {
     machine.dispatch('stop');
+    resetCharacterSelection(); // Reset character selection when restarting the game
   } else if (machine.state === 'idle') {
     machine.dispatch('start');
   }
 });
 
-// Add a click event listener to the canvas for making moves
+// Add a click event listener to the canvas 
+// for making moves
 canvas.addEventListener('click', function (event) {
   if (!gameStarted) {
     return;
@@ -182,7 +181,8 @@ machine.on('transition', function (state) {
 // Function to initialize the game
 function init() {
   board = createBoard(ctx);
-  drawOverlay(ctx)
+  drawOverlay(ctx); // Call drawOverlay to draw character selection overlay
+  drawBoard(ctx,board); // Draw the board
 }
 
 // Call the init function to start the game

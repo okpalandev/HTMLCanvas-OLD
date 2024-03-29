@@ -97,19 +97,17 @@ function drawBoard(ctx, board) {
             }
         }
     }
-}
-/**
+}/**
  * Draws an overlay on the canvas to select the player character ('X' or 'O').
  * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
- * @param {string} currentPlayer - The current player ('X' or 'O').
+ * @param {string} currentPlayer - The currently selected player character ('X' or 'O').
  */
 function drawOverlay(ctx, currentPlayer) {
     const { width: WIDTH, height: HEIGHT } = ctx.canvas;
-    // fill the left side with green and the right side with red
-    
-    ctx.fillStyle = 'red';
+    // Fill the left side with red for 'X' and the right side with green for 'O'
+    ctx.fillStyle = currentPlayer === 'X' ? 'red' : 'lightgray';
     ctx.fillRect(0, 0, WIDTH / 2, HEIGHT);
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = currentPlayer === 'O' ? 'green' : 'lightgray';
     ctx.fillRect(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
 
     // Draw vertical line
@@ -132,53 +130,55 @@ function drawOverlay(ctx, currentPlayer) {
     ctx.fillText('O', (WIDTH / 4) * 3, HEIGHT / 2);
 
     // Add event listener to select character
-    canvas.addEventListener('click', selectCharacter);
-
-    function selectCharacter(event) {
-        const x = event.clientX - canvas.offsetLeft;
-        const selectedCharacter = x < WIDTH / 2 ? 'X' : 'O';
-        if (selectedCharacter !== currentPlayer) {
-            currentPlayer = selectedCharacter;
-            // Clear the canvas and redraw the overlay with the updated selection
-            clearCanvas(ctx);
-            /**  drawOverlay(ctx, currentPlayer); */
-        }
-        // Remove the event listener after character selection
-        canvas.removeEventListener('click', selectCharacter);
-    }
+    const selectCharacter = (event) => {
+        const x = event.offsetX; // Use offsetX to get the x-coordinate relative to the canvas
+        currentPlayer = x < WIDTH / 2 ? 'X' : 'O';
+        drawOverlay(ctx, currentPlayer);
+        ctx.canvas.removeEventListener('click', selectCharacter);
+        machine.dispatch('play');
+    };
+    
+    ctx.canvas.addEventListener('click', selectCharacter);
 }
+
+
+
 
 function clearCanvas(ctx) {
     const { width: WIDTH, height: HEIGHT } = ctx.canvas;
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 }
 
-export { clearCanvas }
-
+/**
+ * Draws the winning line on the canvas.
+ * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+ * @param {Array<Array<string>>} board - The game board.
+ * @param {Array<Array<number>>} winningCells - The indices of the winning cells.
+ */
 function drawWinningLine(ctx, board, winningCells) {
+    const { width: WIDTH, height: HEIGHT } = ctx.canvas;
     const cellWidth = WIDTH / 3;
     const cellHeight = HEIGHT / 3;
-    
+
     // Set line color and thickness
     ctx.strokeStyle = 'blue';
     ctx.lineWidth = 5;
-  
+
     ctx.beginPath();
     // Determine the starting position of the line based on the first winning cell
     const startX = winningCells[0][1] * cellWidth + cellWidth / 2;
     const startY = winningCells[0][0] * cellHeight + cellHeight / 2;
     ctx.moveTo(startX, startY);
-    
+
     // Draw line through all winning cells
     for (let i = 1; i < winningCells.length; i++) {
         const x = winningCells[i][1] * cellWidth + cellWidth / 2;
         const y = winningCells[i][0] * cellHeight + cellHeight / 2;
         ctx.lineTo(x, y);
     }
-  
+
     ctx.stroke();
     ctx.closePath();
-    
 }
-export { drawWinningLine}
-export { createBoard, drawX, drawO, drawBoard, drawOverlay };
+
+export { createBoard, drawX, drawO, drawBoard, drawOverlay, clearCanvas, drawWinningLine };
