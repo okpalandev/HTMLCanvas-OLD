@@ -148,10 +148,12 @@ function drawOverlay(ctx, currentPlayer) {
     }
 }
 
-function clearOverlay(ctx) {
+function clearCanvas(ctx) {
     const { width: WIDTH, height: HEIGHT } = ctx.canvas;
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 }
+
+export { clearCanvas }
 
 function drawWinningLine(ctx, board, winningCells) {
     const cellWidth = WIDTH / 3;
@@ -179,4 +181,4 @@ function drawWinningLine(ctx, board, winningCells) {
     
 }
 export { drawWinningLine}
-export { createBoard, drawX, drawO, drawBoard, drawOverlay,clearOverlay };
+export { createBoard, drawX, drawO, drawBoard, drawOverlay };

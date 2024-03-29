@@ -1,7 +1,7 @@
 // Import necessary functions and createMachine from './utils'
 import { createMachine } from './utils/state-machine.js';
 import { startTimer, pauseTimer, resumeTimer } from './utils/timer.js';
-import { drawOverlay, clearOverlay, drawWinningLine, createBoard } from './utils/board.js';
+import { drawOverlay, drawWinningLine, createBoard, clearCanvas } from './utils/board.js';
 import { isWin, isBoardFull ,getWinningCells } from './utils/game-processing.js';
 
 // Get the canvas element and its 2d rendering context
@@ -39,7 +39,7 @@ const machine = createMachine({
         drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
       },
       onExit: function() {
-        clearOverlay(ctx);
+        clearCanvas(ctx);
       }
     },
     pause: {
@@ -148,18 +148,9 @@ function resetGame() {
   drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
 }
 
-// Function to initialize the game
-function init() {
-  board = createBoard(ctx);
-  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
-}
-
-// Call the init function to start the game
-init();
 
 // Listen for state transitions
 machine.on('transition', function (state) {
-
   console.log('Transition:', state);
   switch (state) {
     case 'playing':
@@ -169,10 +160,11 @@ machine.on('transition', function (state) {
       break;
     case 'pause':
       ppBtn.textContent = 'Resume';
+      ssBtn.textContent = 'Stop';
       break;
     case 'idle':
-      ppBtn.textContent = 'Pause';
-      ssBtn.textContent = 'Start';
+      ppBtn.textContent = 'PAUSE';
+      ssBtn.textContent = 'STOP';
       gameStarted = false;
       break;
     case 'win':
@@ -183,7 +175,20 @@ machine.on('transition', function (state) {
       break;
     case 'stop':
       resetGame();
+      ppBtn.textContent = 'Pause';
+      ssBtn.textContent = 'Start';
+      gameStarted = false;
       break;
+      
   };
-  
 });
+
+
+// Function to initialize the game
+function init() {
+  board = createBoard(ctx);
+  drawOverlay(ctx, currentPlayer === 'X' ? 'O' : 'X');
+}
+
+// Call the init function to start the game
+init();
