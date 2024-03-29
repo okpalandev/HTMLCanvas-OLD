@@ -1,8 +1,8 @@
 // Import necessary functions and createMachine from './utils'
 import { createMachine } from './utils/state-machine.js';
-import { startTimer, pauseTimer, resumeTimer } from './utils/timer.js';
-import { drawOverlay, drawWinningLine, createBoard, clearCanvas } from './utils/board.js';
-import { isWin, isBoardFull ,getWinningCells } from './utils/game-processing.js';
+import { startTimer, pauseTimer, resumeTimer, resetTimer } from './utils/timer.js';
+import { drawOverlay, drawWinningLine, createBoard, clearCanvas, drawX, drawO } from './utils/board.js';
+import { isWin, isBoardFull, getWinningCells } from './utils/game-processing.js';
 
 // Get the canvas element and its 2d rendering context
 const canvas = document.getElementById('canvas');
@@ -27,9 +27,7 @@ const machine = createMachine({
         play: 'playing', // Transition to playing state when player selects character
       },
       onExit : function() {
-        clearCanvas(ctx);
-  const board = createBoard(ctx);
-        drarwBoard(ctx, board);
+        drawOverlay(ctx, currentPlayer); // Draw the character selection overlay
       }
     },
     playing: {
@@ -62,7 +60,7 @@ const machine = createMachine({
       onEnter: function() {
         pauseTimer();
         const winningCells = getWinningCells(board, currentPlayer);
-        drawWinningLine(ctx, winningCells);
+        drawWinningLine(ctx, board, winningCells);
       },
     },
     draw: {
@@ -77,14 +75,15 @@ const machine = createMachine({
 });
 
 // Event listener for character selection
-canvas.addEventListener('click', function selectCharacter(event) {
+function selectCharacter(event) {
   if (machine.state === 'select') {
     const x = event.clientX - canvas.offsetLeft;
-    const selectedCharacter = x < WIDTH / 2 ? 'X' : 'O';
-    currentPlayer = selectedCharacter;
+    currentPlayer = x < WIDTH / 2 ? 'X' : 'O';
     machine.dispatch('play'); // Dispatch play action to transition to playing state
   }
-});
+}
+
+canvas.addEventListener('click', selectCharacter);
 
 // Event listener for the pause-play button
 const ppBtn = document.getElementById('pause-play');
@@ -145,6 +144,7 @@ function resetGame() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
   board = createBoard(ctx);
   currentPlayer = 'X';
+  gameStarted = false;
 }
 
 // Listen for state transitions
@@ -160,10 +160,9 @@ machine.on('transition', function (state) {
       ppBtn.textContent = 'Resume';
       ssBtn.textContent = 'Stop';
       break;
-    case 'idle':
-      ppBtn.textContent = 'PAUSE';
-      ssBtn.textContent = 'STOP';
-      gameStarted = false;
+    case 'select':
+      ppBtn.textContent = 'Pause';
+      ssBtn.textContent = 'Stop';
       break;
     case 'win':
     case 'draw':
@@ -175,15 +174,14 @@ machine.on('transition', function (state) {
       resetGame();
       ppBtn.textContent = 'Pause';
       ssBtn.textContent = 'Start';
-      gameStarted = false;
       break;
-      
-  };
+  }
 });
 
 // Function to initialize the game
 function init() {
   board = createBoard(ctx);
+  drawOverlay(ctx)
 }
 
 // Call the init function to start the game
