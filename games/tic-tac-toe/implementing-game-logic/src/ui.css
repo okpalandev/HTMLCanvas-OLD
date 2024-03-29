@@ -91,6 +91,34 @@
     font-size: 100px;
 }
 
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 50%;
+    height: inherit;
+    transform: translateX(-50%);
+}
+.controls button {
+    /* reset css button */
+    background: none;
+    border: none;
+    color: black;
+    font: bold 16px 'Courier New', Courier, monospace;
+    cursor: pointer;
+    padding: 10px;
+    height: calc(100% /2);
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5) inset;
+}
+
+#start-stop:hover,
+#pause-play:hover {
+    cursor: pointer;
+}
+
 /* For tablet devices and screens with a maximum width of 480px */
 @media (max-width: 480px) {
     .canvas-container canvas {
