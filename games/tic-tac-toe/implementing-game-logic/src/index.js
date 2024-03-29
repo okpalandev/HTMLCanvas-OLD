@@ -115,6 +115,24 @@ function init() {
   });
   
 
+  const ppBtn = document.getElementById('pause-play'); 
+  ppBtn.addEventListener('click', function () {
+    if (machine.state === 'playing') {
+      machine.dispatch('pause');
+    } else if (machine.state === 'pause') {
+      machine.dispatch('play');
+    } 
+  });
+
+  const ssBtn = document.getElementById('start-stop');
+  ssBtn.addEventListener('click', function () {
+    machine.dispatch('restart');
+  });
+
+
+
+
+
 }
 
 
