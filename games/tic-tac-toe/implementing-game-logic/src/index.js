@@ -17,6 +17,7 @@ let currentPlayer = 'X'; // Start with player X
 let gameStarted = false; // Flag to track if the game has started
 let board; // Declare the board variable
 
+
 // Define the state machine
 const machine = createMachine({
   // Define initial state
