@@ -1,0 +1,9 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container canvas {
+    outline: 5px solid blue;
+}

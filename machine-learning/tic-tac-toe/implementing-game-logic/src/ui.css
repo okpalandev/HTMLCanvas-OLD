@@ -1,0 +1,166 @@
+.canvas-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+}
+
+.canvas-container canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    outline: 2px solid blue;
+    box-sizing: border-box;
+}
+
+.context-menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 150px; /* Reduce height for better appearance */
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font: bold 16px 'Courier New', Courier, monospace;
+    box-sizing: border-box;
+    background: lightblue;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%; /* Adjust width for better alignment */
+}
+
+
+.context-menu .player {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.context-menu .player-score {
+    display: block;
+    font-size: 20px;
+    color: black;
+    margin: 15px;
+    padding: 0;
+}
+.player p
+.player-score::before {
+    content: "Score: ";
+    color: black;
+    font-size: 20px;
+}
+
+
+.context-menu .player p {
+    display: block;
+    font-size: 50px;
+    color: black;
+    margin: 15px;
+    padding: 0;
+}
+
+.context-menu .player:first-of-type {
+    background: lightgreen;
+}
+
+.context-menu .player:last-of-type {
+    background: lightcoral;
+}
+
+.context-menu .player:first-of-type:before {
+    content: "X";
+    color: green;
+    font-size: 100px;
+}
+
+.context-menu .player:last-of-type:before {
+    content: "O";
+    color: red;
+    font-size: 100px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 50%;
+    height: inherit;
+    transform: translateX(-50%);
+    height: 200px;
+    box-sizing: border-box;
+}
+
+.controls span {
+    background: none;
+    border: none;
+    color: black;
+    padding: 10px;
+    height: 100px;
+    width: 200px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow:  0 0 5px 0 rgba(0, 0, 0, 0.5)  inset;
+    font-family: Georgia, 'Times New Roman', Times, serif;  
+    text-transform: uppercase;
+    line-height: 100px;
+    font-size: 1.7rem;
+}
+
+#countdown {
+    font-size: 150px;
+    font-weight: bold;
+    color: cadetblue;
+    text-align: center;
+    margin: 10px;
+    padding: 0;
+}
+
+.controls span:hover {
+    cursor: pointer;
+}
+
+
+
+.controls #stop-start {
+    background: lightcoral;
+}
+
+.controls #pause-play {
+    background: lightgreen;
+}
+
+
+.controls #stop-start:hover,
+.controls #pause-play:hover {
+    height: 100%;
+    line-height: calc(200%);
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+
+/* For tablet devices and screens with a maximum width of 480px */
+@media (max-width: 480px) {
+    .canvas-container canvas {
+        width: 50vw;
+        height: 50vh;
+    }
+
+    .context-menu {
+        height: 50px;
+        font-size: 10px;
+        width: min-content;
+    }
+
+}
+
