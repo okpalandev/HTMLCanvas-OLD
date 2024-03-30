@@ -11,3 +11,4 @@ drawX(ctx,0,0);
 drawO(ctx,0,1);
 drawX(ctx,1,0);
 drawO(ctx,2,1);
+
